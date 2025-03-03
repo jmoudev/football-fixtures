@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing_extensions import Annotated
 
 from requests_cache import CachedSession
 import typer
@@ -31,7 +32,7 @@ def _get_readable_datetime(timestamp):
     return f"{_datetime.strftime('%d %b %H:%M')}"
 
 
-def main(team: str):
+def main(team: str, results: Annotated[bool, typer.Option()]):
     session = CachedSession(".fpl_cache", backend="sqlite")
 
     teams = _get_teams(session)
@@ -44,14 +45,22 @@ def main(team: str):
         for fixture in fixtures
         if fixture["team_h"] == team_id or fixture["team_a"] == team_id
     ]
-    # recent_fixtures = [fixture for fixture in team_fixtures if fixture["finished"]][-5:]
-    upcoming_fixtures = [
-        fixture for fixture in team_fixtures if not fixture["finished"]
-    ][:5]
-    print("Upcoming Fixtures:")
-    for fixture in upcoming_fixtures:
-        fixture_string = f"- {_get_team_from_id(fixture['team_h'], teams)} vs {_get_team_from_id(fixture['team_a'], teams)}, {_get_readable_datetime(fixture['kickoff_time'])}"
-        print(fixture_string)
+    if results:
+        recent_fixtures = [fixture for fixture in team_fixtures if fixture["finished"]][
+            -5:
+        ]
+        print("Results:")
+        for fixture in recent_fixtures:
+            fixture_string = f"- {_get_team_from_id(fixture['team_h'], teams)} {fixture['team_h_score']} {_get_team_from_id(fixture['team_a'], teams)} {fixture['team_a_score']}, {_get_readable_datetime(fixture['kickoff_time'])}"
+            print(fixture_string)
+    else:
+        upcoming_fixtures = [
+            fixture for fixture in team_fixtures if not fixture["finished"]
+        ][:5]
+        print("Upcoming Fixtures:")
+        for fixture in upcoming_fixtures:
+            fixture_string = f"- {_get_team_from_id(fixture['team_h'], teams)} vs {_get_team_from_id(fixture['team_a'], teams)}, {_get_readable_datetime(fixture['kickoff_time'])}"
+            print(fixture_string)
 
 
 if __name__ == "__main__":
