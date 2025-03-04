@@ -4,6 +4,8 @@ from typing_extensions import Annotated
 from requests_cache import CachedSession
 import typer
 
+app = typer.Typer(add_completion=False)
+
 
 def _get_teams(session):
     response = session.get("https://fantasy.premierleague.com/api/bootstrap-static/")
@@ -32,6 +34,7 @@ def _get_readable_datetime(timestamp):
     return f"{_datetime.strftime('%d %b %H:%M')}"
 
 
+@app.command()
 def main(team: str, results: Annotated[bool, typer.Option()]):
     session = CachedSession(".fpl_cache", backend="sqlite")
 
@@ -49,19 +52,15 @@ def main(team: str, results: Annotated[bool, typer.Option()]):
         recent_fixtures = [fixture for fixture in team_fixtures if fixture["finished"]][
             -5:
         ]
-        print("Results:")
+        typer.echo("Results:")
         for fixture in recent_fixtures:
             fixture_string = f"- {_get_team_from_id(fixture['team_h'], teams)} {fixture['team_h_score']} {_get_team_from_id(fixture['team_a'], teams)} {fixture['team_a_score']}, {_get_readable_datetime(fixture['kickoff_time'])}"
-            print(fixture_string)
+            typer.echo(fixture_string)
     else:
         upcoming_fixtures = [
             fixture for fixture in team_fixtures if not fixture["finished"]
         ][:5]
-        print("Upcoming Fixtures:")
+        typer.echo("Upcoming Fixtures:")
         for fixture in upcoming_fixtures:
             fixture_string = f"- {_get_team_from_id(fixture['team_h'], teams)} vs {_get_team_from_id(fixture['team_a'], teams)}, {_get_readable_datetime(fixture['kickoff_time'])}"
-            print(fixture_string)
-
-
-if __name__ == "__main__":
-    typer.run(main)
+            typer.echo(fixture_string)
