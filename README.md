@@ -6,7 +6,7 @@ The API used for this application is at Fantasy Premier League utilising endpoin
 
 Additionally, you can add the upcoming fixtures to your Google Calendar.
 
-This project is intended as a playground to use Typer and the CliTestRunner class to achieve testing of a CLI application.
+This project is intended as a playground to use Typer and the CliRunner class to achieve testing of a CLI application.
 
 <!-- TODO
 ## Installation
