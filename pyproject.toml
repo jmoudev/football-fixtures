@@ -17,6 +17,10 @@ fixtures = "fixtures.main:app"
 packages = [{include = "fixtures", from = "src"}]
 
 [dependency-groups]
+ci = [
+    {include-group = "lint"},
+    {include-group = "test"},
+]
 dev = [
     "pre-commit>=4.1.0",
 ]
