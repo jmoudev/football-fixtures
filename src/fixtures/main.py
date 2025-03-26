@@ -53,6 +53,7 @@ def _get_readable_datetime(timestamp):
 
 @app.command()
 def main(team: str, results: Annotated[bool, typer.Option()] = False):
+    # TODO: handle scenarios for requests caching
     session = CachedSession(".fpl_cache", backend="sqlite")
 
     teams = _get_teams(session)
