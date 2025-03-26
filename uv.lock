@@ -165,6 +165,11 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
+ci = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+]
 dev = [
     { name = "pre-commit" },
 ]
@@ -184,6 +189,11 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
+ci = [
+    { name = "pytest", specifier = ">=8.3.5" },
+    { name = "pytest-cov", specifier = ">=6.0.0" },
+    { name = "ruff", specifier = ">=0.9.9" },
+]
 dev = [{ name = "pre-commit", specifier = ">=4.1.0" }]
 lint = [{ name = "ruff", specifier = ">=0.9.9" }]
 test = [
